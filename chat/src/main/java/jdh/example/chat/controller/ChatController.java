@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jdh.example.chat.model.dto.ChatRoomDTO;
+import jdh.example.chat.model.dto.ChatRoomDTO_bak;
 import jdh.example.chat.model.service.ChatService;
 import jdh.example.chat.util.ValidateUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ChatController {
 	
 	// 채팅방 생성
 	@PostMapping
-	public ChatRoomDTO createRoom(@RequestBody Map<String, Object> input) {
+	public ChatRoomDTO_bak createRoom(@RequestBody Map<String, Object> input) {
 		String name = "test";
 		if(ValidateUtil.checkNotEmpty(input.get("name"))) name = input.get("name").toString();
 		
@@ -37,7 +37,7 @@ public class ChatController {
 	
 	// 채팅방 조회
 	@GetMapping
-	public List<ChatRoomDTO> findAllRoom() {
+	public List<ChatRoomDTO_bak> findAllRoom() {
 		return chatService.findAllRoom();
 	}
 }

@@ -15,7 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jdh.example.chat.model.dto.ChatRoomDTO;
+import jdh.example.chat.model.dto.ChatRoomDTO_bak;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatService {
 	private final ObjectMapper objectMapper;
 	// 서버에 생성된 모든 채팅방 정보
-	private Map<String, ChatRoomDTO> chatRooms;
+	private Map<String, ChatRoomDTO_bak> chatRooms;
 
 	@PostConstruct
 	private void init() {
@@ -38,19 +38,19 @@ public class ChatService {
 	}
 	
 	// 모든 채팅방 정보 리턴
-	public List<ChatRoomDTO> findAllRoom() {
+	public List<ChatRoomDTO_bak> findAllRoom() {
 		return new ArrayList<>(chatRooms.values());
 	}
 	
 	// 채팅방 조회
-	public ChatRoomDTO findRoomById(String roomId) {
+	public ChatRoomDTO_bak findRoomById(String roomId) {
 		return chatRooms.get(roomId);
 	}
 	
 	// 채팅방 생성
-	public ChatRoomDTO createRoom(String name) {
+	public ChatRoomDTO_bak createRoom(String name) {
 		String randomId = UUID.randomUUID().toString();
-		ChatRoomDTO chatRoomDTO = ChatRoomDTO.builder()
+		ChatRoomDTO_bak chatRoomDTO = ChatRoomDTO_bak.builder()
 				.roomId(randomId)
 				.name(name)
 				.build();

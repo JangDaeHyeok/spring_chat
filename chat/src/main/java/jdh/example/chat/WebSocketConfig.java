@@ -1,29 +1,33 @@
 package jdh.example.chat;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * 
  * @author 장대혁
  * @date 2022-01-11
- * @description WebSocket을 활성화하고 WebSocket 접속 엔드포인트를 /jdh/chat으로 설정
- *              cros 모든 경로 설정
+ * @description WebSocket을 활성화하고 Stomp WebSocket 접속 엔드포인트를 /jdh-stomp으로 설정
+ *			    Stomp를 이용한 pub/sub 방식을 사용하기 위해 메시지 브로거 prefix 설정
  */
-@RequiredArgsConstructor
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
-	private final WebSocketHandler webSocketHandler;
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry config) {
+		// 메시지 구독 요청 prefix 설정
+		config.enableSimpleBroker("/sub");
+		// 메시지 발행 요청 prefix 설정
+		config.setApplicationDestinationPrefixes("/pub");
+	}
 	
 	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(webSocketHandler, "/jdh/chat").setAllowedOrigins("*");
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		// WebSocket endpoint 설정
+		registry.addEndpoint("/jdh-stomp").setAllowedOrigins("*")
+				.withSockJS();
 	}
-
 }
