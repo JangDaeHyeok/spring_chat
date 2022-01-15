@@ -1,4 +1,4 @@
-package jdh.example.chat;
+package jdh.example.chat.config.ws;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

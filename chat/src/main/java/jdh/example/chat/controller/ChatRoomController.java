@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jdh.example.chat.model.dto.ChatRoomDTO;
-import jdh.example.chat.model.repository.ChatRoomRepository;
+import jdh.example.chat.model.repository.ChatRoomRepository_bak;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
-	private final ChatRoomRepository chatRoomRepository;
+	private final ChatRoomRepository_bak chatRoomRepository;
 	
 	// 모든 채팅방 목록 반환
 	@GetMapping("/rooms")

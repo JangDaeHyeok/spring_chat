@@ -8,6 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatRoomDTO {
+	// redis에 저장되는 객체는 직렬화가 가능해야 함으로 직렬화 세팅
+	private static final long serialVersionUID = 6494678977089006639L;
+
 	private String roomId;
 	private String name;
 	

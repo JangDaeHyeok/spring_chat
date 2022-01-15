@@ -1,0 +1,7 @@
+# 운영 서버용 application yml
+#spring:
+#  profiles:
+#    active: product
+#  redis:
+#    host: 
+#    port: 

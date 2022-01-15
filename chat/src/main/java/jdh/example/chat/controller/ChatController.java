@@ -1,43 +1,33 @@
 package jdh.example.chat.controller;
 
-import java.util.List;
-import java.util.Map;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.stereotype.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import jdh.example.chat.model.dto.ChatRoomDTO_bak;
-import jdh.example.chat.model.service.ChatService;
-import jdh.example.chat.util.ValidateUtil;
+import jdh.example.chat.model.dto.ChatMsgDTO;
+import jdh.example.chat.model.repository.ChatRoomRepository;
+import jdh.example.chat.redis.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 
 /**
  * @author 장대혁
- * @date 2022-01-11
- * @description 채팅방 생성 및 조회 RestAPI 구현
+ * @date 2022-01-15
+ * @description 
  */
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/chat")
+@Controller
 public class ChatController {
-	@Autowired ChatService chatService;
+	private final RedisPublisher redisPublisher;
+	private final ChatRoomRepository chatRoomRepository;
 	
-	// 채팅방 생성
-	@PostMapping
-	public ChatRoomDTO_bak createRoom(@RequestBody Map<String, Object> input) {
-		String name = "test";
-		if(ValidateUtil.checkNotEmpty(input.get("name"))) name = input.get("name").toString();
+	// WebSocket /pub/chat/message 로 들어오는 메시지 처리
+	@MessageMapping("/chat/message")
+	public void message(ChatMsgDTO chatMsgDTO) {
+		if(ChatMsgDTO.MessageType.ENTER.equals(chatMsgDTO.getType())) {
+			chatRoomRepository.enterChatRoom(chatMsgDTO.getRoomId());
+			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 입장하셨습니다.");
+		}
 		
-		return chatService.createRoom(name);
-	}
-	
-	// 채팅방 조회
-	@GetMapping
-	public List<ChatRoomDTO_bak> findAllRoom() {
-		return chatService.findAllRoom();
+		// WebSocket에 발행된 메시지를 redis로 발행(publish)
+		redisPublisher.publish(chatRoomRepository.getTopic(chatMsgDTO.getRoomId()), chatMsgDTO);
 	}
 }
