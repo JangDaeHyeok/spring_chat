@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	
 	// 채팅 테스트를 위한 embedded-redis 의존성 설정
-	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	// implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 }
 
 test {
