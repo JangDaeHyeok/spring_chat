@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @author 장대혁
  * @date 2022-01-15
- * @description 
+ * @description 메시지 pub으로 들어오는 경우 처리하는 컨트롤러
  */
 @Slf4j
 @RequiredArgsConstructor
