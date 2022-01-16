@@ -30,7 +30,8 @@ public class RedisSubscriber implements MessageListener {
 	public void onMessage(Message message, byte[] pattern) {
 		try {
 			// redis에서 발행한 데이터 deserialize
-			String publishMessage = redisTemplate.getStringSerializer().deserialize(message.getBody()).toString();
+			String publishMessage = new String(redisTemplate.getStringSerializer().deserialize(message.getBody()));
+			log.info("[onMessage] 메시지 publish" + publishMessage);
 			
 			// ChatMessage 객체로 매핑
 			ChatMsgDTO chatMsgDTO = objectMapper.readValue(publishMessage, ChatMsgDTO.class);
