@@ -1,17 +1,5 @@
 package jdh.example.chat.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import jdh.example.chat.model.dto.ChatRoomDTO_bak;
-import jdh.example.chat.model.service.ChatService;
-import jdh.example.chat.util.ValidateUtil;
-
 /**
  * @author 장대혁
  * @date 2022-01-11
@@ -20,21 +8,21 @@ import jdh.example.chat.util.ValidateUtil;
 // @RequiredArgsConstructor
 // @RestController
 // @RequestMapping("/chat")
-public class ChatController_bak {
-	@Autowired ChatService chatService;
-	
-	// 채팅방 생성
-	@PostMapping
-	public ChatRoomDTO_bak createRoom(@RequestBody Map<String, Object> input) {
-		String name = "test";
-		if(ValidateUtil.checkNotEmpty(input.get("name"))) name = input.get("name").toString();
-		
-		return chatService.createRoom(name);
-	}
-	
-	// 채팅방 조회
-	@GetMapping
-	public List<ChatRoomDTO_bak> findAllRoom() {
-		return chatService.findAllRoom();
-	}
-}
+//public class ChatController_bak {
+//	@Autowired ChatService chatService;
+//	
+//	// 채팅방 생성
+//	@PostMapping
+//	public ChatRoomDTO_bak createRoom(@RequestBody Map<String, Object> input) {
+//		String name = "test";
+//		if(ValidateUtil.checkNotEmpty(input.get("name"))) name = input.get("name").toString();
+//		
+//		return chatService.createRoom(name);
+//	}
+//	
+//	// 채팅방 조회
+//	@GetMapping
+//	public List<ChatRoomDTO_bak> findAllRoom() {
+//		return chatService.findAllRoom();
+//	}
+//}
