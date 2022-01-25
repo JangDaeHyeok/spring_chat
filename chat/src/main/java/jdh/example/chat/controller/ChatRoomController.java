@@ -3,6 +3,7 @@ package jdh.example.chat.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jdh.example.chat.model.dto.ChatRoomDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 장대혁
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Controller
+@CrossOrigin
+@Slf4j
 @RequestMapping("/chat")
 public class ChatRoomController {
 	private final ChatRoomRepository chatRoomRepository;
@@ -30,6 +34,7 @@ public class ChatRoomController {
 	@GetMapping("/rooms")
 	@ResponseBody
 	public List<ChatRoomDTO> roomListGet() {
+		log.info("[ChatRoomController] rooms 조회");
 		return chatRoomRepository.findAllRoom();
 	}
 	
