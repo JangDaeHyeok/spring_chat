@@ -1,6 +1,8 @@
 package jdh.example.chat.model.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -14,11 +16,18 @@ public class ChatRoomDTO implements Serializable {
 
 	private String roomId;
 	private String name;
+	private String regDt;
 	
 	public static ChatRoomDTO create(String name) {
 		ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
 		chatRoomDTO.roomId = UUID.randomUUID().toString();
 		chatRoomDTO.name = name;
+		
+		// 채팅방 생성일자
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		chatRoomDTO.regDt = now.format(formatter);
+		
 		return chatRoomDTO;
 	}
 }
