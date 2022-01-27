@@ -16,12 +16,14 @@ import jdh.example.chat.model.api.ApiResponseDTO;
 import jdh.example.chat.model.api.ApiResponseResult;
 import jdh.example.chat.model.dto.UserTbDTO;
 import jdh.example.chat.model.service.UserTbService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-	@Autowired UserTbService service;
+	@Autowired UserTbService userTbService;
 	
 	@GetMapping(value="user")
 	public Map<String, Object> userListGet() throws Exception {
@@ -30,7 +32,7 @@ public class UserController {
 		
 		UserTbDTO userTbDTO = new UserTbDTO();
 		userTbDTO.setDelYn("N");
-		List<UserTbDTO> list = service.getUserTbList(userTbDTO);
+		List<UserTbDTO> list = userTbService.getUserTbList(userTbDTO);
 		dataMap.put("list", list);
 		
 		log.info("사용자 정보 목록 조회");
@@ -44,7 +46,7 @@ public class UserController {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		
-		UserTbDTO one = service.getUserTbOne(userId);
+		UserTbDTO one = userTbService.getUserTbOne(userId);
 		dataMap.put("one", one);
 		
 		log.info("사용자 정보 조회");
@@ -57,7 +59,7 @@ public class UserController {
 	public Map<String, Object> userOneGetById(@RequestBody UserTbDTO userTbDTO) throws Exception {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		service.addUserTb(userTbDTO);
+		userTbService.addUserTb(userTbDTO);
 		
 		log.info("사용자 정보 등록");
 		
