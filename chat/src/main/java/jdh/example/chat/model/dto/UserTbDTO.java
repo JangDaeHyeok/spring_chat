@@ -8,6 +8,7 @@ import lombok.Setter;
 public class UserTbDTO {
 	private int userIdx;
 	private String userId;
+	private String userPw;
 	private String nickname;
 	private String regDt;
 	private String modDt;
