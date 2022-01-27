@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	// adoc 파일 변환, build 디렉토리에 복사하기 위한 plugin 추가
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'jdh.example'
@@ -11,6 +13,20 @@ sourceCompatibility = '11'
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+	}
+}
+
+// 스니펫 생성 디렉토리 전역변수 설정
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+// 스니펫으로 문서 작성 후 build - docs - asciidoc 하위에 생기는 html 파일을 into 경로로 복사
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'BOOT-INF/classes/static/docs'
 	}
 }
 
@@ -25,6 +41,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	
 	implementation 'com.google.code.gson:gson:2.8.0'
 	
@@ -32,8 +50,46 @@ dependencies {
 	
 	// 채팅 테스트를 위한 embedded-redis 의존성 설정
 	// implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	
+	// spring security
+	// implementation 'org.springframework.boot:spring-boot-starter-security'
+	// testImplementation 'org.springframework.security:spring-security-test'
+	
+	// DataBase
+	runtimeOnly 'mysql:mysql-connector-java'
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+	
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+	
+	// spring rest docs
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 test {
 	useJUnitPlatform()
+}
+
+// 아스키닥터 설정
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+// 아스키닥터 실행 전 처음으로 기존에 존재하는 docs 삭제
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+// from 파일을 into 경로로 복사
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+
+build {
+	dependsOn copyDocument
 }

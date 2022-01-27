@@ -1,3 +1,24 @@
 spring:
   profiles:
     active: local
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/spring_chat?characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: 1234
+    sql-script-encoding: UTF-8
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources: 
+      static-locations: classpath:/static/
+      add-mappings: true
+
+
+logging:
+  level:
+    web: info
+    root: info
+    jdh.example.chat: info

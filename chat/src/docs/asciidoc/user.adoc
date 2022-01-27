@@ -1,0 +1,84 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Rest Docs Sample API Document
+github.com/JangDaeHyeok
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+[[introduction]]
+== 소개
+
+장대혁 Spring Rest Docs API
+
+=== Domain
+
+|===
+| 환경 | local
+
+| 깃허브
+| `github.com/JangDaeHyeok`
+|===
+
+[[TEST1]]
+== REQUEST BODY
+JSON 타입의 request body 요청입니다.
+
+include::{snippets}/hello/http-request.adoc[]
+
+include::{snippets}/hello/request-fields.adoc[]
+
+== RESPONSE BODY
+
+include::{snippets}/hello/http-response.adoc[]
+
+include::{snippets}/hello/response-fields.adoc[]
+
+[[TEST2]]
+== REQUEST PARAM
+request parameter 요청입니다.
+
+include::{snippets}/hello2/http-request.adoc[]
+
+include::{snippets}/hello2/request-parameters.adoc[]
+
+== RESPONSE PARAM
+
+include::{snippets}/hello2/http-response.adoc[]
+
+include::{snippets}/hello2/response-fields.adoc[]
+
+[[TEST3]]
+== REQUEST PATH PARAM
+request path parameter 요청입니다.
+
+include::{snippets}/hello3/http-request.adoc[]
+
+include::{snippets}/hello3/path-parameters.adoc[]
+
+== RESPONSE PATH PARAM
+
+include::{snippets}/hello3/http-response.adoc[]
+
+include::{snippets}/hello3/response-fields.adoc[]
+
+[[TEST4]]
+== REQUEST DTO
+validation 정보가 포함된 DTO 타입의 request body 입니다
+
+include::{snippets}/hello_dto/http-request.adoc[]
+
+include::{snippets}/hello_dto/curl-request.adoc[]
+
+include::{snippets}/hello_dto/request-fields.adoc[]
+
+== RESPONSE DTO
+
+include::{snippets}/hello_dto/http-response.adoc[]
+
+include::{snippets}/hello_dto/response-fields.adoc[]

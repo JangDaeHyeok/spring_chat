@@ -1,4 +1,4 @@
-package jdh.example.chat.controller;
+package jdh.example.chat.controller.chat;
 
 /**
  * @author 장대혁
