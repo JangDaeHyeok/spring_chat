@@ -37,8 +37,8 @@ public class UserControllerTest {
 	
 	@Autowired ObjectMapper objectMapper;
 	
-	@MockBean private UserTbService service;
-	@MockBean private DataSource dataSource;
+	@MockBean private UserTbService service; // WebMvcTest에서 service annotation 이용을 위한 MockBean 추가
+	@MockBean private DataSource dataSource; // db 이용 시 mockbean 추가
 	
 	@Test
 	@DisplayName("사용자 목록 조회")
