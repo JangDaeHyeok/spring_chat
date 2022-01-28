@@ -3,7 +3,7 @@ package jdh.example.chat.controller.chat;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
-import jdh.example.chat.model.dto.ChatMsgDTO;
+import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import jdh.example.chat.redis.RedisPublisher;
 import lombok.RequiredArgsConstructor;

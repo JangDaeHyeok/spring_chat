@@ -31,10 +31,7 @@ public class ApiResponseDTO {
 		this.bindResult(result);
 		this.bindCode(status);
 		
-		if(input.containsKey("list"))
-			returnMap.put("list", input);
-		else if(input.containsKey("one"))
-			returnMap.put("one", input);
+		returnMap.put("data", input);
 	}
 	
 	private void bindResult(ApiResponseResult result) { 

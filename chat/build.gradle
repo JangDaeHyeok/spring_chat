@@ -37,8 +37,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
 	implementation 'com.google.code.gson:gson:2.8.0'
+	implementation 'commons-codec:commons-codec:1.15'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	
@@ -46,13 +48,13 @@ dependencies {
 	// implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 	
 	// spring security
-	// implementation 'org.springframework.boot:spring-boot-starter-security'
-	// testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
 	
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
-	// implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-	// implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 	
 	// DataBase
 	runtimeOnly 'mysql:mysql-connector-java'

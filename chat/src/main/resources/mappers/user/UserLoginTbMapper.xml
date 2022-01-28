@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jdh.example.chat.model.dao.user.UserLoginTbMapper">
+
+	<select id="selectUserLoginTbOne" parameterType="jdh.example.chat.model.dto.user.UserLoginTbDTO" resultType="jdh.example.chat.model.dto.user.UserLoginTbDTO">
+		select 
+			
+			user_idx
+			, user_id
+			, salt
+			, user_pw
+		from user_tb
+		<where>
+			
+			<if test="userIdx                   !=null and userIdx                   !=''"><![CDATA[ and user_idx = #{userIdx} ]]></if>
+			<if test="userId                    !=null and userId                    !=''"><![CDATA[ and user_id = #{userId} ]]></if>
+			and del_yn = 'N'
+		</where>
+		order by reg_dt limit 1
+	</select>
+</mapper>

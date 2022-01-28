@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jdh.example.chat.model.dao.user.UserRegistTbMapper">
+
+	<insert id="insertUserTb" parameterType="jdh.example.chat.model.dto.user.UserRegistTbDTO">
+		insert into user_tb (
+			<trim prefixOverrides=",">
+				<if test="userId                   !=null and userId                   !=''"> , user_id </if>
+				<if test="salt                     !=null and salt                     !=''"> , salt </if>
+				<if test="userPw                   !=null and userPw                   !=''"> , user_pw </if>
+				<if test="nickname                 !=null and nickname                 !=''"> , nickname </if>
+				, reg_dt
+			</trim>
+		) values (
+			<trim prefixOverrides=",">
+				<if test="userId                   !=null and userId                   !=''"> , #{userId} </if>
+				<if test="salt                     !=null and salt                     !=''"> , #{salt} </if>
+				<if test="userPw                   !=null and userPw                   !=''"> , #{userPw} </if>
+				<if test="nickname                 !=null and nickname                 !=''"> , #{nickname} </if>
+				, now()
+			</trim>
+		)
+	</insert>
+</mapper>

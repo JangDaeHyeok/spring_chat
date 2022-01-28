@@ -31,7 +31,7 @@ public class ChatApplication extends SpringBootServletInitializer {
 		sessionFactory.setDataSource(dataSource);
 		
 		// MyBatis Mapper Source
-		Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mappers/*Mapper.xml");
+		Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mappers/**/*Mapper.xml");
 		sessionFactory.setMapperLocations(res);
 		
 		// MyBatis Config setting

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jdh.example.chat.model.dto.ChatRoomDTO;
+import jdh.example.chat.model.dto.chat.ChatRoomDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

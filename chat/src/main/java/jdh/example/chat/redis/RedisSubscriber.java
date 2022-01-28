@@ -1,5 +1,8 @@
 package jdh.example.chat.redis;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jdh.example.chat.model.dto.ChatMsgDTO;
+import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +38,11 @@ public class RedisSubscriber implements MessageListener {
 			
 			// ChatMessage 객체로 매핑
 			ChatMsgDTO chatMsgDTO = objectMapper.readValue(publishMessage, ChatMsgDTO.class);
+			
+			// 채팅 전송시간
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			chatMsgDTO.setRegDt(now.format(formatter));
 			
 			// WebSocket 구독자에게 채팅 메시지 전송
 			messagingTemplate.convertAndSend("/sub/chat/room/" + chatMsgDTO.getRoomId(), chatMsgDTO);
