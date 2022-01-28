@@ -27,6 +27,8 @@
 			<trim prefixOverrides=",">
 				<if test="userIdx                  !=null and userIdx                  !=''"> , user_idx </if>
 				<if test="userId                   !=null and userId                   !=''"> , user_id </if>
+				<if test="salt                     !=null and salt                     !=''"> , salt </if>
+				<if test="userPw                   !=null and userPw                   !=''"> , user_pw </if>
 				<if test="nickname                 !=null and nickname                 !=''"> , nickname </if>
 				, reg_dt
 				<if test="delYn                    !=null and delYn                    !=''"> , del_yn </if>
@@ -35,6 +37,8 @@
 			<trim prefixOverrides=",">
 				<if test="userIdx                  !=null and userIdx                  !=''"> , #{userIdx} </if>
 				<if test="userId                   !=null and userId                   !=''"> , #{userId} </if>
+				<if test="salt                     !=null and salt                     !=''"> , #{salt} </if>
+				<if test="userPw                   !=null and userPw                   !=''"> , #{userPw} </if>
 				<if test="nickname                 !=null and nickname                 !=''"> , #{nickname} </if>
 				, now()
 				<if test="delYn                    !=null and delYn                    !=''"> , #{delYn} </if>

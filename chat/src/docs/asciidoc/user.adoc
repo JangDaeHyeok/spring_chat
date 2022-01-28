@@ -2,7 +2,7 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-= Rest Docs Sample API Document
+= Spring Chat User Api Docs
 github.com/JangDaeHyeok
 :doctype: book
 :icons: font
@@ -13,72 +13,44 @@ github.com/JangDaeHyeok
 
 [[introduction]]
 == 소개
+장대혁, 최미애 Spring Chat 사용자 관련 API
 
-장대혁 Spring Rest Docs API
 
-=== Domain
+[[user list]]
 
-|===
-| 환경 | local
+== User List Request
+사용자 목록 조회
 
-| 깃허브
-| `github.com/JangDaeHyeok`
-|===
+include::{snippets}/userList/http-request.adoc[]
 
-[[TEST1]]
-== REQUEST BODY
-JSON 타입의 request body 요청입니다.
+include::{snippets}/userList/request-parameters.adoc[]
 
-include::{snippets}/hello/http-request.adoc[]
+== User List Response
 
-include::{snippets}/hello/request-fields.adoc[]
+include::{snippets}/userList/response-fields.adoc[]
 
-== RESPONSE BODY
+[[user one]]
 
-include::{snippets}/hello/http-response.adoc[]
+== User One Request
+사용자 단일 정보 조회
 
-include::{snippets}/hello/response-fields.adoc[]
+include::{snippets}/userOne/http-request.adoc[]
 
-[[TEST2]]
-== REQUEST PARAM
-request parameter 요청입니다.
+include::{snippets}/userOne/path-parameters.adoc[]
 
-include::{snippets}/hello2/http-request.adoc[]
+== User One Response
 
-include::{snippets}/hello2/request-parameters.adoc[]
+include::{snippets}/userOne/response-fields.adoc[]
 
-== RESPONSE PARAM
+[[User Add]]
 
-include::{snippets}/hello2/http-response.adoc[]
+== User Add Request
+사용자 정보 등록(회원가입)
 
-include::{snippets}/hello2/response-fields.adoc[]
+include::{snippets}/userAdd/http-request.adoc[]
 
-[[TEST3]]
-== REQUEST PATH PARAM
-request path parameter 요청입니다.
+include::{snippets}/userAdd/request-fields.adoc[]
 
-include::{snippets}/hello3/http-request.adoc[]
+== User Add Response
 
-include::{snippets}/hello3/path-parameters.adoc[]
-
-== RESPONSE PATH PARAM
-
-include::{snippets}/hello3/http-response.adoc[]
-
-include::{snippets}/hello3/response-fields.adoc[]
-
-[[TEST4]]
-== REQUEST DTO
-validation 정보가 포함된 DTO 타입의 request body 입니다
-
-include::{snippets}/hello_dto/http-request.adoc[]
-
-include::{snippets}/hello_dto/curl-request.adoc[]
-
-include::{snippets}/hello_dto/request-fields.adoc[]
-
-== RESPONSE DTO
-
-include::{snippets}/hello_dto/http-response.adoc[]
-
-include::{snippets}/hello_dto/response-fields.adoc[]
+include::{snippets}/userAdd/response-fields.adoc[]

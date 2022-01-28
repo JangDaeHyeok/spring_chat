@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import jdh.example.chat.model.dao.UserTbMapper;
 import jdh.example.chat.model.dto.UserTbDTO;
+import jdh.example.chat.util.encript.SHA256;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,14 +19,19 @@ public class UserTbService {
 		return userTbMapper.selectUserTbList(userTbDTO);
 	}
 	
-	public UserTbDTO getUserTbOne(String userId) throws Exception {
+	public UserTbDTO getUserTbOne(int userIdx) throws Exception {
 		UserTbDTO userTbDTO = new UserTbDTO();
-		userTbDTO.setUserId(userId);
+		userTbDTO.setUserIdx(userIdx);
 		
 		return userTbMapper.selectUserTbList(userTbDTO).get(0);
 	}
 	
 	public void addUserTb(UserTbDTO userTbDTO) throws Exception {
+		// 비밀번호 암호화
+		String userSalt = SHA256.getSalt();
+		userTbDTO.setSalt(userSalt);
+		userTbDTO.setUserPw(SHA256.encrypt(userTbDTO.getUserPw(), userSalt));
+				
 		userTbMapper.insertUserTb(userTbDTO);
 	}
 }

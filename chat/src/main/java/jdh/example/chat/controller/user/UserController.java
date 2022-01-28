@@ -41,13 +41,21 @@ public class UserController {
 		return returnMap;
 	}
 	
-	@GetMapping(value="user/{userId}")
-	public Map<String, Object> userOneGetById(@PathVariable String userId) throws Exception {
+	@GetMapping(value="user/{userIdx}")
+	public Map<String, Object> userOneGetByIdx(@PathVariable String userIdx) throws Exception {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		
-		UserTbDTO one = userTbService.getUserTbOne(userId);
-		dataMap.put("one", one);
+		try {
+			UserTbDTO one = userTbService.getUserTbOne(Integer.parseInt(userIdx));
+			dataMap.put("one", one);
+		} catch (NumberFormatException e) {
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.BAD_PARAMETER).getReturnMap();
+			return returnMap;
+		} catch (Exception e) {
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.SERVER_ERROR).getReturnMap();
+			return returnMap;
+		}
 		
 		log.info("사용자 정보 조회");
 		
