@@ -7,5 +7,7 @@ import jdh.example.chat.model.dto.user.UserRegistTbDTO;
 
 @Mapper
 public interface UserRegistTbMapper {
+	int selectUserDuplCheck(String userId) throws Exception;
+	
 	void insertUserTb(UserRegistTbDTO userRegistTbDTO) throws Exception;
 }

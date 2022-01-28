@@ -11,56 +11,29 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import jdh.example.chat.ApiCommonTest;
 import jdh.example.chat.controller.user.UserController;
 import jdh.example.chat.model.dto.user.UserRegistTbDTO;
-import jdh.example.chat.model.service.user.UserRegistTbService;
-import jdh.example.chat.model.service.user.UserTbService;
-import jdh.example.chat.security.handler.JwtAuthenticationEntryPoint;
-import jdh.example.chat.security.jwt.JwtTokenProvider;
 
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(controllers = UserController.class
 			, excludeFilters = { //!Added!
 					@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class) })
 @AutoConfigureMockMvc(addFilters = false)
-@AutoConfigureRestDocs
-public class UserControllerTest {
-	@Autowired MockMvc mockMvc;
-	
-	@Autowired ObjectMapper objectMapper;
-	
-	// WebMvcTest에서 service annotation 이용을 위한 MockBean 추가
-	@MockBean private UserTbService service; 
-	@MockBean private UserRegistTbService userRegistTbService;
-	@MockBean private DataSource dataSource; // db 이용 시 mockbean 추가
-	@MockBean private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	@MockBean private JwtTokenProvider jwtTokenProvider;
-	
+public class UserControllerTest extends ApiCommonTest {
 	@Test
 	@DisplayName("사용자 목록 조회")
 	void testUserListGet() throws Exception {

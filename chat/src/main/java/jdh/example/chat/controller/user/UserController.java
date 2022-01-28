@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,9 +72,14 @@ public class UserController {
 	public Map<String, Object> userOneGetById(@RequestBody UserRegistTbDTO userRegistTbDTO) throws Exception {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		userRegistTbService.addUserTb(userRegistTbDTO);
-		
 		log.info("사용자 정보 등록");
+		
+		try {
+			userRegistTbService.addUserTb(userRegistTbDTO);
+		} catch (DuplicateMemberException e) {
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.DUPLICATE_MEMBER).getReturnMap();
+			return returnMap;
+		}
 		
 		returnMap = new ApiResponseDTO(ApiResponseResult.SUCEESS, ApiResponseCode.OK).getReturnMap();
 		return returnMap;

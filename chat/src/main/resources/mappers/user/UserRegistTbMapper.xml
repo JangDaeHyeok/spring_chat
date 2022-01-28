@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="jdh.example.chat.model.dao.user.UserRegistTbMapper">
+	<select id="selectUserDuplCheck" parameterType="String" resultType="int">
+		select 
+			count(*)
+		from user_tb
+			where user_id = #{userId} and del_yn = 'N'
+	</select>
 
 	<insert id="insertUserTb" parameterType="jdh.example.chat.model.dto.user.UserRegistTbDTO">
 		insert into user_tb (
