@@ -25,7 +25,7 @@ public class ChatRoomDTO implements Serializable {
 		
 		// 채팅방 생성일자
 		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		chatRoomDTO.regDt = now.format(formatter);
 		
 		return chatRoomDTO;
