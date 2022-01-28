@@ -42,8 +42,8 @@ import lombok.Data;
  * @Title       JWT 관련 발급 컨트롤러
  * @Author      장대혁
  * @Developer   장대혁
- * @Date        2022-01-04
- * @Description JWT 토큰 발급 컨트롤러, 쿠키 저장
+ * @Date        2022-01-28
+ * @Description JWT 토큰 발급 컨트롤러, local storage 저장
  */
 @RestController
 public class LoginController {

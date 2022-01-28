@@ -26,7 +26,7 @@ import jdh.example.chat.model.service.user.UserTbService;
  * @Title       JWT Token Util
  * @Author      장대혁
  * @Developer   장대혁
- * @Date        2022-01-04
+ * @Date        2022-01-28
  * @Description JWT 생성, 조회, 유효성 체크
  * @Warning     secret 변수를 이용해 토근을 검증하기 때문에 실제 사용 시 별도 처리 필요
  */

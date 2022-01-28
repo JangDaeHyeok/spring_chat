@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +30,7 @@ import jdh.example.chat.model.service.user.UserTbService;
  * @Title       JWT Request Filter
  * @Author      장대혁
  * @Developer   장대혁
- * @Date        2022-01-04
+ * @Date        2022-01-28
  * @Description JWT을 검증하는 filter
  *              OncePerRequestFilter를 상속해 요청당 한번의 filter를 수행한다.
  *              EXCLUDE_URL에 있는 url은 체크하지 않는다.
@@ -57,12 +56,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// jwt local storage 사용 시
-		// final String token = request.getHeader("Authorization");
+		final String token = request.getHeader("Authorization");
+		
 		// jwt cookie 사용 시
+		/*
 		String token = Arrays.stream(request.getCookies())
 				.filter(c -> c.getName().equals("chatToken"))
 				.findFirst() .map(Cookie::getValue)
 				.orElse(null);
+		*/
 		
 		String userId = null;
 		String jwtToken = null;

@@ -1,11 +1,15 @@
 package jdh.example.chat.controller.chat;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import jdh.example.chat.redis.RedisPublisher;
+import jdh.example.chat.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +25,14 @@ public class ChatController {
 	private final RedisPublisher redisPublisher;
 	private final ChatRoomRepository chatRoomRepository;
 	
+	@Autowired JwtTokenProvider jwtTokenProvider;
+	
 	// WebSocket /pub/chat/message 로 들어오는 메시지 처리
 	@MessageMapping("/chat/message")
-	public void message(ChatMsgDTO chatMsgDTO) throws Exception {
+	public void message(ChatMsgDTO chatMsgDTO, HttpServletRequest req) throws Exception {
+		// JWT 토큰 정보를 이용한 message sender 설정
+		chatMsgDTO.setSender(jwtTokenProvider.getUsernameFromToken(req.getHeader("Authorization")));
+		
 		if(ChatMsgDTO.MessageType.ENTER.equals(chatMsgDTO.getType())) {
 			chatRoomRepository.enterChatRoom(chatMsgDTO.getRoomId());
 			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 입장하셨습니다.");
