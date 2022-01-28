@@ -1,4 +1,4 @@
-package jdh.example.chat.model.dto;
+package jdh.example.chat.model.dto.chat;
 
 import lombok.Getter;
 import lombok.Setter;

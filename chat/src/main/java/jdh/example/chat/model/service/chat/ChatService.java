@@ -1,4 +1,4 @@
-package jdh.example.chat.model.service;
+package jdh.example.chat.model.service.chat;
 
 /**
  * @author 장대혁

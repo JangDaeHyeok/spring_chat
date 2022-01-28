@@ -1,4 +1,4 @@
-package jdh.example.chat.model.dto;
+package jdh.example.chat.model.dto.chat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

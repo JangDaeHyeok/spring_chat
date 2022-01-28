@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jdh.example.chat.model.dao.jwt.UserRefreshTokenTbMapper">
+	<select id="selectUserRefreshTokenTbList" parameterType="jdh.example.chat.model.dto.jwt.UserRefreshTokenTbDTO" resultType="jdh.example.chat.model.dto.jwt.UserRefreshTokenTbDTO">
+		select
+			user_refresh_token_idx
+			, user_idx
+			, refresh_token
+		from
+			user_refresh_token_tb
+		<where>
+			<if test="userRefreshTokenIdx != null and userRefreshTokenIdx != ''"> and user_refresh_token_idx = #{userRefreshTokenIdx} </if>
+			<if test="userIdx != null and userIdx != ''"> and user_idx = #{userIdx} </if>
+		</where>
+	</select>
+	
+	<select id="selectUserRefreshTokenTbCount" parameterType="jdh.example.chat.model.dto.jwt.UserRefreshTokenTbDTO" resultType="int">
+		select
+			count(*)
+		from
+			user_refresh_token_tb
+		<where>
+			<if test="userRefreshTokenIdx != null and userRefreshTokenIdx != ''"> and user_refresh_token_idx = #{userRefreshTokenIdx} </if>
+			<if test="userIdx != null and userIdx != ''"> and user_idx = #{userIdx} </if>
+		</where>
+	</select>
+	
+	<insert id="insertUserRefreshTokenTb" parameterType="jdh.example.chat.model.dto.jwt.UserRefreshTokenTbDTO">
+		insert user_refresh_token_tb
+			(user_idx, refresh_token, reg_dt)
+		values
+			(#{userIdx}, #{refreshToken}, now())
+	</insert>
+	
+	<update id="updateUserRefreshTokenTb" parameterType="jdh.example.chat.model.dto.jwt.UserRefreshTokenTbDTO">
+		update user_refresh_token_tb set
+			refresh_token = #{refreshToken}
+			, mod_dt = now()
+		<where>
+			<if test="userRefreshTokenIdx != null and userRefreshTokenIdx != ''"> and user_refresh_token_idx = #{userRefreshTokenIdx} </if>
+			<if test="userIdx != null and userIdx != ''"> and user_idx = #{userIdx} </if>
+		</where>
+	</update>
+	
+	<delete id="deleteUserRefreshTokenTb" parameterType="int">
+		delete from user_refresh_token_tb
+		where
+			user_refresh_token_idx = #{userRefreshTokenIdx}
+	</delete>
+</mapper>

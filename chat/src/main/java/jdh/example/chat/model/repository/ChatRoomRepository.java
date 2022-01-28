@@ -12,7 +12,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 
-import jdh.example.chat.model.dto.ChatRoomDTO;
+import jdh.example.chat.model.dto.chat.ChatRoomDTO;
 import jdh.example.chat.redis.RedisSubscriber;
 import lombok.RequiredArgsConstructor;
 

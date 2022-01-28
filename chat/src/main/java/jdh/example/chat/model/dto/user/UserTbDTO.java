@@ -1,4 +1,4 @@
-package jdh.example.chat.model.dto;
+package jdh.example.chat.model.dto.user;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -12,11 +12,6 @@ public class UserTbDTO {
 	
 	@NotEmpty
 	private String userId;
-	
-	private String salt;
-	
-	@NotEmpty
-	private String userPw;
 	
 	@NotEmpty
 	private String nickname;
