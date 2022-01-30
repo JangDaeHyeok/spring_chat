@@ -45,6 +45,8 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 			// 리소스 항목 제외
 			.antMatchers("/static/**").permitAll()
 			.antMatchers("/favicon.ico").permitAll()
+			// 회원가입 경로 항목 제외
+			.antMatchers("/user/join").permitAll()
 			// 로그인 경로 항목 제외
 			.antMatchers("/login/authentication").permitAll()
 			.antMatchers("/login/refresh").permitAll()
