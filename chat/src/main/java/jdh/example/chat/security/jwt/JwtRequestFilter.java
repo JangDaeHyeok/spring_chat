@@ -48,6 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			Arrays.asList(
 				"/static/**",
 				"/favicon.ico",
+				"/user/join",
 				"/login/authentication",
 				"/login/refresh"
 			));
