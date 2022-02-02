@@ -16,7 +16,7 @@ import jdh.example.chat.security.jwt.JwtTokenProvider;
  * @author 장대혁
  * @date 2022-01-11
  * @description WebSocket을 활성화하고 Stomp WebSocket 접속 엔드포인트를 /jdh-stomp으로 설정
- *			    Stomp를 이용한 pub/sub 방식을 사용하기 위해 메시지 브로거 prefix 설정
+ *				Stomp를 이용한 pub/sub 방식을 사용하기 위해 메시지 브로거 prefix 설정
  */
 @Configuration
 @EnableWebSocketMessageBroker
@@ -38,6 +38,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		registry.addEndpoint("/jdh-stomp").setAllowedOriginPatterns("*");
 	}
 	
+	// WebSocket 앞단에서 사용할 interceptor 설정(StompHandler)
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
 		registration.interceptors(stompHandler);

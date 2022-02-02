@@ -64,9 +64,10 @@ public class RedisConfig {
 		return container;
 	}
 	
-	// 실제 메시지를 처리하는 subscriber 설정 추가
+	// 실제 메시지를 처리하는 redis subscriber 설정 추가
 	@Bean
 	public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
+		// sendMessage 메소드를 실행하도록 어뎁터 설정
 		return new MessageListenerAdapter(subscriber, "sendMessage");
 	}
 	
