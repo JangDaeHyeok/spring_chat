@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jdh.example.chat.model.dto.chat.ChatRoomDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author 장대혁
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Controller
 @CrossOrigin
-@Slf4j
 @RequestMapping("/chat")
 public class ChatRoomController {
 	private final ChatRoomRepository chatRoomRepository;
@@ -34,8 +32,9 @@ public class ChatRoomController {
 	@GetMapping("/rooms")
 	@ResponseBody
 	public List<ChatRoomDTO> roomListGet() {
-		log.info("[ChatRoomController] rooms 조회");
-		return chatRoomRepository.findAllRoom();
+		List<ChatRoomDTO> chatRooms = chatRoomRepository.findAllRoom();
+		chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
+		return chatRooms;
 	}
 	
 	// 채팅방 생성

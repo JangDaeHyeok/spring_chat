@@ -91,7 +91,7 @@ public class JwtTokenProvider {
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 		
-		return accessToken;
+		return "Bearer " + accessToken;
 	}
 	
 	// id를 입력받아 accessToken 생성
@@ -108,7 +108,7 @@ public class JwtTokenProvider {
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 		
-		return refreshToken;
+		return "Bearer " + refreshToken;
 	}
 	
 	// id를 입력받아 accessToken, refreshToken 생성
@@ -140,8 +140,10 @@ public class JwtTokenProvider {
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 		
-		tokens.put("accessToken", accessToken);
-		tokens.put("refreshToken", refreshToken);
+		tokens.put("accessToken", "Bearer " + accessToken);
+		tokens.put("refreshToken", "Bearer " + refreshToken);
+		log.warn("tokens :: " + tokens.toString());
+		
 		return tokens;
 	}
 	
@@ -172,9 +174,9 @@ public class JwtTokenProvider {
 		}
 		// refreshToken이 만료된 경우 재발급
 		catch(ExpiredJwtException e) {
-			rDTO.setRefreshToken("Bearer " + generateRefreshToken(id));
+			rDTO.setRefreshToken(generateRefreshToken(id));
 			userRefreshTokenTbService.editRefreshToken(rDTO);
-			log.info("[reGenerateRefreshToken] refreshToken 재발급 완료 : {}", "Bearer " + generateRefreshToken(id));
+			log.info("[reGenerateRefreshToken] refreshToken 재발급 완료 : {}", generateRefreshToken(id));
 			return true;
 		}
 		// 그 외 예외처리
@@ -185,7 +187,7 @@ public class JwtTokenProvider {
 	}
 	
 	// 토근 검증
-	public Boolean validateToken(String token, UserTbDTO userTbDTO) {
+	public Boolean validateToken(String token) {
 		try {
 			Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 			return true;

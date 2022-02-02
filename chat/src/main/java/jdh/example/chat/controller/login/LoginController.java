@@ -58,7 +58,7 @@ public class LoginController {
 	/* 
 	 * localStorage 사용 시
 	 */
-	@PostMapping(value="login/authentication")
+	@PostMapping(value="login/authentication", produces = "application/json; charset=utf-8")
 	public Map<String, Object> TestAdminAdminGet(@RequestBody Map<String, Object> input, HttpServletRequest req, HttpServletResponse rep) throws Exception{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -83,16 +83,14 @@ public class LoginController {
 		
 		// JWT 발급
 		Map<String, String> tokens = jwtTokenUtil.generateTokenSet(uDTO.getUserId(), rules);
-		String accessToken = URLEncoder.encode(tokens.get("accessToken"), "utf-8");
-		String refreshToken = URLEncoder.encode(tokens.get("refreshToken"), "utf-8");
 		
 		// refresh token 정보 저장/수정
 		UserRefreshTokenTbDTO rDTO = new UserRefreshTokenTbDTO();
 		rDTO.setUserIdx(uDTO.getUserIdx());
-		rDTO.setRefreshToken("Bearer " + refreshToken);
+		rDTO.setRefreshToken(tokens.get("refreshToken"));
 		userRefreshTokenTbService.addRefreshToken(rDTO);
 		
-		dataMap.put("accessToken", accessToken);
+		dataMap.put("accessToken", tokens.get("accessToken"));
 		returnMap = new ApiResponseDTO(ApiResponseResult.SUCEESS, ApiResponseCode.OK, dataMap).getReturnMap();
 		
 		return returnMap;
@@ -101,7 +99,7 @@ public class LoginController {
 	/*
 	 *  JWT 토큰 발급(쿠키 사용 시)
 	 
-	@PostMapping(value="login/authentication")
+	@PostMapping(value="login/authentication", produces = "application/json; charset=utf-8")
 	public Map<String, Object> testJwtTokenGet(@RequestBody Map<String, Object> input, HttpServletRequest req, HttpServletResponse rep) throws Exception{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		UserLoginTbDTO uDTO = new UserLoginTbDTO();
@@ -155,7 +153,7 @@ public class LoginController {
 	*/
 	
 	// JWT 토큰 재발급
-	@PostMapping(value="login/refresh")
+	@PostMapping(value="login/refresh", produces = "application/json; charset=utf-8")
 	public Map<String, Object> testJwtTokenRefresh(@RequestBody Map<String, Object> input, HttpServletRequest req, HttpServletResponse rep) throws Exception{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		String refreshToken = null;

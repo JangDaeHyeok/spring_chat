@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import jdh.example.chat.redis.RedisSubscriber;
 
 /**
  * @author 장대혁
@@ -22,19 +25,19 @@ public class RedisConfig {
 	private String redisHost;
 	@Value("${spring.redis.port}")
 	private int redisPort;
-	@Value("${spring.redis.password}")
-	private String redisPassword;
+//	@Value("${spring.redis.password}")
+//	private String redisPassword;
 	
-	/* 비밀번호가 없는 경우
-	 * @Bean
+	/* 
+	 * 비밀번호가 없는 경우
+	 */
+	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		return new LettuceConnectionFactory(redisHost, redisPort);
 	}
-	*/
 	
 	/*
 	 * 비밀번호가 있는 경우
-	 */
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
@@ -44,13 +47,27 @@ public class RedisConfig {
 		LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
 		return lettuceConnectionFactory;
 	}
+	 */
+	
+	// 단일 Topic 사용을 위한 Bean 설정
+	@Bean
+	public ChannelTopic channelTopic() {
+		return new ChannelTopic("jdh_chatroom");
+	}
 	
 	// redis pub/sub 메시지를 처리하는 listner
 	@Bean
-	public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
+	public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, ChannelTopic channelTopic) {
 		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
+		container.addMessageListener(listenerAdapter, channelTopic);
 		return container;
+	}
+	
+	// 실제 메시지를 처리하는 subscriber 설정 추가
+	@Bean
+	public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
+		return new MessageListenerAdapter(subscriber, "sendMessage");
 	}
 	
 	// 어플리케이션에서 사용할 redisTemplate

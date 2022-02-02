@@ -16,6 +16,7 @@ public class ChatRoomDTO implements Serializable {
 
 	private String roomId;
 	private String name;
+	private long userCount;
 	private String regDt;
 	
 	public static ChatRoomDTO create(String name) {

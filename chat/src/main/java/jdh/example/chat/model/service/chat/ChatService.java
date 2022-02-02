@@ -1,50 +1,43 @@
 package jdh.example.chat.model.service.chat;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.stereotype.Service;
+
+import jdh.example.chat.model.dto.chat.ChatMsgDTO;
+import jdh.example.chat.model.repository.ChatRoomRepository;
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author 장대혁
  * @date 2022-01-11
  * @description 채팅방 조회, 생성, 메시지 전송을 담당하는 service
  */
-//@Slf4j
-//@RequiredArgsConstructor
-//@Service
-//public class ChatService {
-//	private final ObjectMapper objectMapper;
-//	// 서버에 생성된 모든 채팅방 정보
-//	private Map<String, ChatRoomDTO_bak> chatRooms;
-//
-//	@PostConstruct
-//	private void init() {
-//		chatRooms = new LinkedHashMap<>();
-//	}
-//	
-//	// 모든 채팅방 정보 리턴
-//	public List<ChatRoomDTO_bak> findAllRoom() {
-//		return new ArrayList<>(chatRooms.values());
-//	}
-//	
-//	// 채팅방 조회
-//	public ChatRoomDTO_bak findRoomById(String roomId) {
-//		return chatRooms.get(roomId);
-//	}
-//	
-//	// 채팅방 생성
-//	public ChatRoomDTO_bak createRoom(String name) {
-//		String randomId = UUID.randomUUID().toString();
-//		ChatRoomDTO_bak chatRoomDTO = ChatRoomDTO_bak.builder()
-//				.roomId(randomId)
-//				.name(name)
-//				.build();
-//		chatRooms.put(randomId, chatRoomDTO);
-//		return chatRoomDTO;
-//	}
-//	
-//	// 지정한 WebSocket session에 메시지 전송
-//	public <T> void sendMessage(WebSocketSession session, T message) {
-//		try {
-//			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-//		} catch (IOException e) {
-//			log.error(e.getMessage(), e);
-//		}
-//	}
-//}
+@RequiredArgsConstructor
+@Service
+public class ChatService {
+	private final ChannelTopic channelTopic;
+	private final RedisTemplate<String, Object> redisTemplate;
+	private final ChatRoomRepository chatRoomRepository;
+	
+	public String getRoomId(String destination) {
+		int lastIndex = destination.lastIndexOf('/');
+		if (lastIndex != -1)
+			return destination.substring(lastIndex + 1);
+		else
+			return "";
+	}
+	
+	// 메시지 발송
+	public void sendChatMessage(ChatMsgDTO chatMsgDTO) {
+		chatMsgDTO.setUserCount(chatRoomRepository.getUserCount(chatMsgDTO.getRoomId()));
+		if (ChatMsgDTO.MessageType.ENTER.equals(chatMsgDTO.getType())) {
+			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 방에 입장했습니다.");
+			chatMsgDTO.setSender("[알림]");
+		} else if (ChatMsgDTO.MessageType.QUIT.equals(chatMsgDTO.getType())) {
+			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 방에서 나갔습니다.");
+			chatMsgDTO.setSender("[알림]");
+		}
+		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMsgDTO);
+	}
+}

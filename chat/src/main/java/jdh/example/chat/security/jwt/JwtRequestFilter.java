@@ -94,7 +94,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				e.printStackTrace();
 			}
 			
-			if(jwtTokenProvider.validateToken(jwtToken, userTbDTO)) {
+			if(jwtTokenProvider.validateToken(jwtToken)) {
 				List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 				

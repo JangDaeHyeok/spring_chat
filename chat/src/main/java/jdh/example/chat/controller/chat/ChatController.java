@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
-import jdh.example.chat.redis.RedisPublisher;
+import jdh.example.chat.model.service.chat.ChatService;
 import jdh.example.chat.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
-	private final RedisPublisher redisPublisher;
-	private final ChatRoomRepository chatRoomRepository;
-	
 	@Autowired JwtTokenProvider jwtTokenProvider;
+	@Autowired ChatRoomRepository chatRoomRepository;
+	@Autowired ChatService chatService;
 	
 	// WebSocket /pub/chat/message 로 들어오는 메시지 처리
 	@MessageMapping("/chat/message")
@@ -33,14 +32,12 @@ public class ChatController {
 		// JWT 토큰 정보를 이용한 message sender 설정
 		chatMsgDTO.setSender(jwtTokenProvider.getUsernameFromToken(req.getHeader("Authorization")));
 		
-		if(ChatMsgDTO.MessageType.ENTER.equals(chatMsgDTO.getType())) {
-			chatRoomRepository.enterChatRoom(chatMsgDTO.getRoomId());
-			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 입장하셨습니다.");
-		}
+		// 채팅방 인원수 세팅
+		chatMsgDTO.setUserCount(chatRoomRepository.getUserCount(chatMsgDTO.getRoomId()));
 		
+		// Websocket에 발행된 메시지를 redis로 발행(publish)
 		try {
-			// WebSocket에 발행된 메시지를 redis로 발행(publish)
-			redisPublisher.publish(chatRoomRepository.getTopic(chatMsgDTO.getRoomId()), chatMsgDTO);
+			chatService.sendChatMessage(chatMsgDTO);
 		} catch (NullPointerException e) {
 			log.error("[ChatController] 채팅 전송 중 문제 발생 : ", e.getMessage());
 		}
