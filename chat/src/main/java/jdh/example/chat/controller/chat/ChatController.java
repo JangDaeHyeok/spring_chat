@@ -1,8 +1,7 @@
 package jdh.example.chat.controller.chat;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
@@ -28,9 +27,9 @@ public class ChatController {
 	
 	// WebSocket /pub/chat/message 로 들어오는 메시지 처리
 	@MessageMapping("/chat/message")
-	public void message(ChatMsgDTO chatMsgDTO, HttpServletRequest req) throws Exception {
+	public void message(ChatMsgDTO chatMsgDTO, @Header("Authorization") String token) throws Exception {
 		// JWT 토큰 정보를 이용한 message sender 설정
-		chatMsgDTO.setSender(jwtTokenProvider.getUsernameFromToken(req.getHeader("Authorization")));
+		chatMsgDTO.setSender(token);
 		
 		// 채팅방 인원수 세팅
 		chatMsgDTO.setUserCount(chatRoomRepository.getUserCount(chatMsgDTO.getRoomId()));
