@@ -41,7 +41,10 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 		log.error("*********************************************************************");
 		log.error("[WebSecurityConfig] Spring Security 설정");
 		
-		http.csrf().disable().antMatcher("/**").authorizeRequests()
+		http.csrf().disable()
+			.headers().frameOptions().sameOrigin()
+			.and()
+			.antMatcher("/**").authorizeRequests()
 			// 리소스 항목 제외
 			.antMatchers("/static/**").permitAll()
 			.antMatchers("/favicon.ico").permitAll()
