@@ -22,6 +22,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jdh.example.chat.model.dto.user.UserTbDTO;
 import jdh.example.chat.model.service.user.UserTbService;
@@ -101,8 +103,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 				
+				// DTO to JSON String
+				ObjectMapper mapper = new ObjectMapper();
+				String samString = mapper.writeValueAsString(userTbDTO);
+				
 				UsernamePasswordAuthenticationToken authenticationToken =
-						new UsernamePasswordAuthenticationToken(userTbDTO, null, grantedAuthorities);
+						new UsernamePasswordAuthenticationToken(samString, null, grantedAuthorities);
 				
 				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
