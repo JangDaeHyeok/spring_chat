@@ -44,18 +44,23 @@ public class JwtTokenProvider {
 	public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60;
 	
 	// token으로 사용자 id 조회
-	public String getUsernameFromToken(String token) {
+	public String getUsernameFromToken(String token) throws Exception {
 		return getClaimFromToken(token, Claims::getId);
 	}
 	
+	// token으로 사용자 닉네임 조회
+	public String getNicknameFromToken(String token) throws Exception {
+		return getClaimFromToken(token, Claims::getIssuer);
+	}
+	
 	// token으로 사용자 속성정보 조회
-	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) throws Exception {
 		final Claims claims = getAllClaimsFromToken(token);
 		return claimsResolver.apply(claims);
 	}
 	
 	// 모든 token에 대한 사용자 속성정보 조회
-	private Claims getAllClaimsFromToken(String token) {
+	private Claims getAllClaimsFromToken(String token) throws Exception {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
 	
@@ -68,22 +73,22 @@ public class JwtTokenProvider {
 	*/
 	
 	// 토큰 만료일자 조회
-	public Date getExpirationDateFromToken(String token) {
+	public Date getExpirationDateFromToken(String token) throws Exception {
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
 	
 	// id를 입력받아 accessToken 생성
-	public String generateAccessToken(String id) {
+	public String generateAccessToken(String id) throws Exception {
 		return generateAccessToken(id, new HashMap<>());
 	}
 	
 	// id, 속성정보를 이용해 accessToken 생성
-	public String generateAccessToken(String id, Map<String, Object> claims) {
+	public String generateAccessToken(String id, Map<String, Object> claims) throws Exception {
 		return doGenerateAccessToken(id, claims);
 	}
 	
 	// JWT accessToken 생성
-	private String doGenerateAccessToken(String id, Map<String, Object> claims) {
+	private String doGenerateAccessToken(String id, Map<String, Object> claims) throws Exception {
 		String accessToken = Jwts.builder()
 				.setClaims(claims)
 				.setId(id)
@@ -96,14 +101,18 @@ public class JwtTokenProvider {
 	}
 	
 	// id를 입력받아 accessToken 생성
-	public String generateRefreshToken(String id) {
+	public String generateRefreshToken(String id) throws Exception {
 		return doGenerateRefreshToken(id);
 	}
 	
 	// JWT accessToken 생성
-	private String doGenerateRefreshToken(String id) {
+	private String doGenerateRefreshToken(String id) throws Exception {
+		// 사용자 정보 조회
+		UserTbDTO userTbDTO = userTbService.getUserTbOneById(id);
+		
 		String refreshToken = Jwts.builder()
 				.setId(id)
+				.setIssuer(userTbDTO.getNickname())
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 5)) // 5시간
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.signWith(SignatureAlgorithm.HS512, secret)
@@ -113,22 +122,26 @@ public class JwtTokenProvider {
 	}
 	
 	// id를 입력받아 accessToken, refreshToken 생성
-	public Map<String, String> generateTokenSet(String id) {
+	public Map<String, String> generateTokenSet(String id) throws Exception {
 		return generateTokenSet(id, new HashMap<>());
 	}
 	
 	// id, 속성정보를 이용해 accessToken, refreshToken 생성
-	public Map<String, String> generateTokenSet(String id, Map<String, Object> claims) {
+	public Map<String, String> generateTokenSet(String id, Map<String, Object> claims) throws Exception {
 		return doGenerateTokenSet(id, claims);
 	}
 	
 	// JWT accessToken, refreshToken 생성
-	private Map<String, String> doGenerateTokenSet(String id, Map<String, Object> claims) {
+	private Map<String, String> doGenerateTokenSet(String id, Map<String, Object> claims) throws Exception {
 		Map<String, String> tokens = new HashMap<String, String>();
+		
+		// 사용자 정보 조회
+		UserTbDTO userTbDTO = userTbService.getUserTbOneById(id);
 		
 		String accessToken = Jwts.builder()
 				.setClaims(claims)
 				.setId(id)
+				.setIssuer(userTbDTO.getNickname())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1))// 1시간
 				.signWith(SignatureAlgorithm.HS512, secret)
@@ -151,9 +164,8 @@ public class JwtTokenProvider {
 	// JWT refreshToken 만료체크 후 재발급
 	public Boolean reGenerateRefreshToken(String id) throws Exception {
 		log.info("[reGenerateRefreshToken] refreshToken 재발급 요청");
-		// 관리자 정보 조회
-		UserTbDTO userTbDTO = new UserTbDTO();
-		userTbDTO = userTbService.getUserTbOneById(id);
+		// 사용자 정보 조회
+		UserTbDTO userTbDTO = userTbService.getUserTbOneById(id);
 		
 		// refreshToken 체크
 		UserRefreshTokenTbDTO rDTO = new UserRefreshTokenTbDTO();
