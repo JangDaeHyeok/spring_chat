@@ -44,7 +44,7 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.headers().frameOptions().sameOrigin()
 			.and()
-			.antMatcher("/**").authorizeRequests()
+			.authorizeRequests()
 			// 사용자 로그인 spring security 적용 제외 항목
 			.antMatchers("/chat/**").hasRole("USER")
 			.anyRequest().permitAll()
@@ -53,10 +53,6 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			// Spring Security에서 session을 생성하거나 사용하지 않도록 설정
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			// jwt filter 적용
 			.and()
 			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
