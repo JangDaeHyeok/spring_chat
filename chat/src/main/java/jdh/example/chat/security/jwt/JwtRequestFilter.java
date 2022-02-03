@@ -50,7 +50,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				"/favicon.ico",
 				"/user/join",
 				"/login/authentication",
-				"/login/refresh"
+				"/login/refresh",
+				"/jdh-stomp"
 			));
 	
 	@Override

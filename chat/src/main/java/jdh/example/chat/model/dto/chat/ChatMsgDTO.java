@@ -7,13 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatMsgDTO {
+	public ChatMsgDTO() {
+		
+	}
+	
 	@Builder
-	public ChatMsgDTO(MessageType type, String roomId, String sender, String message, long userCount) {
+	public ChatMsgDTO(MessageType type, String roomId, String sender, String message, long userCount, String regDt) {
 		this.type = type;
 		this.roomId = roomId;
 		this.sender = sender;
 		this.message = message;
 		this.userCount = userCount;
+		this.regDt = regDt;
 	}
 	
 	// 메시지 타입 : 입장, 채팅

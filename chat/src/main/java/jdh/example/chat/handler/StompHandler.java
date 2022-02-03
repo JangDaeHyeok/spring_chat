@@ -1,6 +1,8 @@
 package jdh.example.chat.handler;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +42,14 @@ public class StompHandler implements ChannelInterceptor {
 			chatRoomRepository.setUserEnterInfo(sessionId, roomId);
 			// 채팅방 인원수 +1
 			chatRoomRepository.plusUserCount(roomId);
+			
+			// 채팅 전송시간
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			
 			// 클라이언트 입장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(name).build());
+			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
 		}
 		// websocket 연결 종료 시
 		else if (StompCommand.DISCONNECT == accessor.getCommand()) {
@@ -51,9 +58,14 @@ public class StompHandler implements ChannelInterceptor {
 			String roomId = chatRoomRepository.getUserEnterRoomId(sessionId);
 			// 채팅방 인원수 -1
 			chatRoomRepository.minusUserCount(roomId);
+			
+			// 채팅 전송시간
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			
 			// 클라이언트 퇴장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(name).build());
+			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
 			// 퇴장한 클라이언트의 roomId 맵핑 정보 삭제
 			chatRoomRepository.removeUserEnterInfo(sessionId);
 		}

@@ -189,7 +189,7 @@ public class JwtTokenProvider {
 	// 토근 검증
 	public Boolean validateToken(String token) {
 		try {
-			Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+			Jwts.parser().setSigningKey(secret).parseClaimsJws(token.replace("Bearer ", ""));
 			return true;
 		} catch (SignatureException e) {
 			log.error("Invalid JWT signature: {}", e.getMessage());
