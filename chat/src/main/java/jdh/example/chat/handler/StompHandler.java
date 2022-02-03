@@ -13,6 +13,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import jdh.example.chat.model.service.chat.ChatService;
@@ -33,7 +35,8 @@ public class StompHandler implements ChannelInterceptor {
 		// websocket 연결 시
 		if (StompCommand.CONNECT == accessor.getCommand()) {
 			// 헤더의 jwt token 검증
-			jwtTokenProvider.getClaims(accessor.getFirstNativeHeader("Authorization"));
+			Jws<Claims> jws = jwtTokenProvider.getClaims(accessor.getFirstNativeHeader("Authorization"));
+			accessor.setUser((Principal) jws);
 		}
 		// 채팅방 구독 요청 시
 		else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
