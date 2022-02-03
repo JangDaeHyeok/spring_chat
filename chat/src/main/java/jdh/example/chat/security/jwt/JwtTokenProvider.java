@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -217,27 +216,5 @@ public class JwtTokenProvider {
 		}
 		
 		return false;
-	}
-	
-	// 토근 검증 후 정보 반환
-	public Jws<Claims> getClaims(String token) {
-		try {
-			return Jwts.parser().setSigningKey(secret).parseClaimsJws(token.replace("Bearer ", ""));
-		} catch (SignatureException e) {
-			log.error("Invalid JWT signature: {}", e.getMessage());
-			throw e;
-		} catch (MalformedJwtException e) {
-			log.error("Invalid JWT token: {}", e.getMessage());
-			throw e;
-		} catch (ExpiredJwtException e) {
-			log.error("JWT token is expired: {}", e.getMessage());
-			throw e;
-		} catch (UnsupportedJwtException e) {
-			log.error("JWT token is unsupported: {}", e.getMessage());
-			throw e;
-		} catch (IllegalArgumentException e) {
-			log.error("JWT claims string is empty: {}", e.getMessage());
-			throw e;
-		}
 	}
 }
