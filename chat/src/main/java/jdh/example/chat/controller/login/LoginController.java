@@ -90,7 +90,11 @@ public class LoginController {
 		rDTO.setRefreshToken(tokens.get("refreshToken"));
 		userRefreshTokenTbService.addRefreshToken(rDTO);
 		
+		// 반환용 사용자 정보 조회
+		UserTbDTO user = userTbService.getUserTbOneByIdx(uDTO.getUserIdx());
+		
 		dataMap.put("accessToken", tokens.get("accessToken"));
+		dataMap.put("data", user);
 		returnMap = new ApiResponseDTO(ApiResponseResult.SUCEESS, ApiResponseCode.OK, dataMap).getReturnMap();
 		
 		return returnMap;
