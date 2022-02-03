@@ -23,12 +23,15 @@ public class RedisSubscriber {
 	
 	// Redis에서 메시지가 발행(publish)되면 RedisConfig 설정에 따른 대기하고 있던 Redis Subscriber가 해당 메시지를 받아 처리
 	public void sendMessage(String publishMessage) {
-		log.info("[RedisSubscriber] 수신 메시지 :: " + publishMessage);
 		try {
 			// ChatMsgDTO 객채로 맵핑
-			ChatMsgDTO chatMessage = objectMapper.readValue(publishMessage, ChatMsgDTO.class);
+			ChatMsgDTO chatMsgDTO = objectMapper.readValue(publishMessage, ChatMsgDTO.class);
 			// 채팅방을 구독한 클라이언트에게 메시지 발송
-			messagingTemplate.convertAndSend("/sub/chat/room/" + chatMessage.getRoomId(), chatMessage);
+			if(chatMsgDTO.getRoomId() != null && !chatMsgDTO.getRoomId().equals("") && !chatMsgDTO.getRoomId().equals("null")) {
+				messagingTemplate.convertAndSend("/sub/chat/room/" + chatMsgDTO.getRoomId(), chatMsgDTO);
+				
+				log.info("[RedisSubscriber] 수신 메시지 :: " + publishMessage);
+			}
 		} catch (Exception e) {
 			log.error("Exception {}", e);
 		}
