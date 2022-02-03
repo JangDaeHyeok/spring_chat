@@ -102,7 +102,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 				
 				UsernamePasswordAuthenticationToken authenticationToken =
-						new UsernamePasswordAuthenticationToken(userTbDTO.getUserId(), null, grantedAuthorities);
+						new UsernamePasswordAuthenticationToken(userTbDTO.getUserId() + ":::" + userTbDTO.getNickname(), null, grantedAuthorities);
 				
 				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);

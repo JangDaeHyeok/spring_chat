@@ -53,7 +53,8 @@ public class StompHandler implements ChannelInterceptor {
 			
 			// 클라이언트 입장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
+			String nickname = name.contains(":::") ? name.split(":::")[1] : name;
+			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(nickname).regDt(now.format(formatter)).build());
 			log.info("[StompHandler] subscribe {}, {}", name, roomId);
 		}
 		// websocket 연결 종료 시
