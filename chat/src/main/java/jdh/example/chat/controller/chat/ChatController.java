@@ -29,7 +29,7 @@ public class ChatController {
 	@MessageMapping("/chat/message")
 	public void message(ChatMsgDTO chatMsgDTO, @Header("Authorization") String token) throws Exception {
 		// JWT 토큰 정보를 이용한 message sender 설정
-		chatMsgDTO.setSender(token);
+		chatMsgDTO.setSender(jwtTokenProvider.getUsernameFromToken(token));
 		
 		// 채팅방 인원수 세팅
 		chatMsgDTO.setUserCount(chatRoomRepository.getUserCount(chatMsgDTO.getRoomId()));
