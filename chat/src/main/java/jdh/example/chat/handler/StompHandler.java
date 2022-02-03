@@ -17,7 +17,9 @@ import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import jdh.example.chat.model.service.chat.ChatService;
 import jdh.example.chat.security.jwt.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class StompHandler implements ChannelInterceptor {
 	@Autowired JwtTokenProvider jwtTokenProvider;
@@ -35,6 +37,8 @@ public class StompHandler implements ChannelInterceptor {
 		}
 		// 채팅방 구독 요청 시
 		else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
+			log.info("[StompHandler] header :: " + message.getHeaders());
+			
 			// header정보에서 구독 채팅방 정보를 얻고, roomId를 추출
 			String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
 			// 채팅방에 들어온 클라이언트 sessionId를 roomId와 맵핑 (나중에 특정 세션이 어떤 채팅방에 들어가 있는지 알기 위함)
@@ -50,9 +54,12 @@ public class StompHandler implements ChannelInterceptor {
 			// 클라이언트 입장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
 			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
+			log.info("[StompHandler] subscribe {}, {}", name, roomId);
 		}
 		// websocket 연결 종료 시
 		else if (StompCommand.DISCONNECT == accessor.getCommand()) {
+			log.info("[StompHandler] header :: " + message.getHeaders());
+			
 			// 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 조회
 			String sessionId = (String) message.getHeaders().get("simpSessionId");
 			String roomId = chatRoomRepository.getUserEnterRoomId(sessionId);
@@ -68,6 +75,7 @@ public class StompHandler implements ChannelInterceptor {
 			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
 			// 퇴장한 클라이언트의 roomId 맵핑 정보 삭제
 			chatRoomRepository.removeUserEnterInfo(sessionId);
+			log.info("[StompHandler] disconnect {}, {}", sessionId, roomId);
 		}
 		
 		return message;
