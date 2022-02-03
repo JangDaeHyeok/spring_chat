@@ -14,6 +14,7 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
+import jdh.example.chat.model.dto.user.UserTbDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
 import jdh.example.chat.model.service.chat.ChatService;
 import jdh.example.chat.security.jwt.JwtTokenProvider;
@@ -52,7 +53,7 @@ public class StompHandler implements ChannelInterceptor {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			
 			// 클라이언트 입장 메시지를 채팅방에 발송 (redis publish)
-			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+			String name = Optional.ofNullable((UserTbDTO) message.getHeaders().get("simpUser")).map(UserTbDTO::getNickname).orElse("UnknownUser");
 			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
 			log.info("[StompHandler] subscribe {}, {}", name, roomId);
 		}
@@ -71,7 +72,7 @@ public class StompHandler implements ChannelInterceptor {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			
 			// 클라이언트 퇴장 메시지를 채팅방에 발송 (redis publish)
-			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+			String name = Optional.ofNullable((UserTbDTO) message.getHeaders().get("simpUser")).map(UserTbDTO::getNickname).orElse("UnknownUser");
 			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(name).regDt(now.format(formatter)).build());
 			// 퇴장한 클라이언트의 roomId 맵핑 정보 삭제
 			chatRoomRepository.removeUserEnterInfo(sessionId);
