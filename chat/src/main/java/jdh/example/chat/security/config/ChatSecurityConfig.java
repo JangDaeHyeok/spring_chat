@@ -45,18 +45,9 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 			.headers().frameOptions().sameOrigin()
 			.and()
 			.antMatcher("/**").authorizeRequests()
-			// 리소스 항목 제외
-			.antMatchers("/static/**").permitAll()
-			.antMatchers("/favicon.ico").permitAll()
-			// 회원가입 경로 항목 제외
-			.antMatchers("/user/join").permitAll()
-			// 로그인 경로 항목 제외
-			.antMatchers("/login/authentication").permitAll()
-			.antMatchers("/login/refresh").permitAll()
-			.antMatchers("/jdh-stomp").permitAll()
-			
 			// 사용자 로그인 spring security 적용 제외 항목
-			.anyRequest().authenticated()
+			.antMatchers("/chat/**").hasRole("USER")
+			.anyRequest().permitAll()
 			
 			// jwt가 없는 경우 exception handler 설정
 			.and()
