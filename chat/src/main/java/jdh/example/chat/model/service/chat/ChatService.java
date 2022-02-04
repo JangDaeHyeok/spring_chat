@@ -1,5 +1,8 @@
 package jdh.example.chat.model.service.chat;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,13 @@ public class ChatService {
 		} else if (ChatMsgDTO.MessageType.QUIT.equals(chatMsgDTO.getType())) {
 			chatMsgDTO.setMessage(chatMsgDTO.getSender() + "님이 방에서 나갔습니다.");
 			chatMsgDTO.setSender("[알림]");
+		} else {
+			// 채팅 전송시간
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			chatMsgDTO.setRegDt(now.format(formatter));
 		}
+		
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMsgDTO);
 	}
 }
