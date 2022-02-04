@@ -1,6 +1,5 @@
 package jdh.example.chat.controller.login;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -160,6 +159,8 @@ public class LoginController {
 	@PostMapping(value="login/refresh", produces = "application/json; charset=utf-8")
 	public Map<String, Object> testJwtTokenRefresh(@RequestBody Map<String, Object> input, HttpServletRequest req, HttpServletResponse rep) throws Exception{
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
 		String refreshToken = null;
 		String userId = "";
 		
@@ -173,8 +174,7 @@ public class LoginController {
 		
 		// token 정보가 존재하지 않는 경우
 		if(rDTO == null) {
-			returnMap.put("result", "fail");
-			returnMap.put("msg", "refresh token 정보가 존재하지 않습니다.");
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.NOT_FOUND).getReturnMap();
 			return returnMap;
 		}
 		// token 정보가 존재하는 경우
@@ -202,8 +202,7 @@ public class LoginController {
 		
 		// refreshToken 사용이 불가능한 경우
 		if(!tokenFl) {
-			returnMap.put("result", "fail");
-			returnMap.put("msg", "refresh token이 만료되었거나 정보가 존재하지 않습니다.");
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.UNAUTHORIZED).getReturnMap();
 			
 			// refreshToken 정보 조회 실패 시 기존에 존재하는 refreshToken 정보 삭제
 			userRefreshTokenTbService.delRefreshToken(rDTO.getUserRefreshTokenIdx());
@@ -221,23 +220,21 @@ public class LoginController {
 			
 			// JWT 발급
 			String tokens = jwtTokenUtil.generateAccessToken(input.get("userId").toString(), rules);
-			String accessToken = URLEncoder.encode(tokens, "utf-8");
 			
-			log.info("[JWT 재발급] accessToken : " + accessToken);
+			log.info("[JWT 재발급] accessToken : " + tokens);
 			
 			// JWT 쿠키 저장(쿠키 명 : token)
-			Cookie cookie = new Cookie("chatToken", "Bearer " + accessToken);
+			Cookie cookie = new Cookie("chatToken", "Bearer " + tokens);
 			cookie.setPath("/");
 			cookie.setMaxAge(60 * 60 * 24 * 1); // 유효기간 1일
 			// httoOnly 옵션을 추가해 서버만 쿠키에 접근할 수 있게 설정
 			cookie.setHttpOnly(true);
 			rep.addCookie(cookie);
 			
-			returnMap.put("result", "success");
-			returnMap.put("msg", "JWT가 발급되었습니다.");
+			dataMap.put("accessToken", tokens);
+			returnMap = new ApiResponseDTO(ApiResponseResult.SUCEESS, ApiResponseCode.OK, dataMap).getReturnMap();
 		}else {
-			returnMap.put("result", "fail");
-			returnMap.put("msg", "access token 발급 중 문제가 발생했습니다.");
+			returnMap = new ApiResponseDTO(ApiResponseResult.FAIL, ApiResponseCode.UNAUTHORIZED).getReturnMap();
 			return returnMap;
 		}
 		
