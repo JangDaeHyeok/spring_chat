@@ -24,6 +24,7 @@
 				<if test="userId                   !=null and userId                   !=''"> , #{userId} </if>
 				<if test="salt                     !=null and salt                     !=''"> , #{salt} </if>
 				<if test="userPw                   !=null and userPw                   !=''"> , #{userPw} </if>
+				<if test="nickname                 !=null and nickname                 !=''"> , #{nickname} </if>
 				<if test="logo                     !=null and logo                     !=''"> , #{logo} </if>
 				, now()
 			</trim>
