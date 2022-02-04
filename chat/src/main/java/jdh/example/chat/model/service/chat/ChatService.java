@@ -47,6 +47,10 @@ public class ChatService {
 			chatMsgDTO.setRegDt(now.format(formatter));
 		}
 		
+		// 채팅 데이터 redis 임시 저장
+		// chatMsgRepository.putChatMsgInfo(chatMsgDTO);
+		
+		// redis topic에 메시지 전송
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMsgDTO);
 	}
 }

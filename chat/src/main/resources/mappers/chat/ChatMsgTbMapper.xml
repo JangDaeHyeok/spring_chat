@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jdh.example.chat.model.dao.user.ChatMsgTbMapper">
+
+	<select id="selectChatMsgTbList" parameterType="jdh.example.chat.model.dto.chat.ChatMsgDTO" resultType="jdh.example.chat.model.dto.chat.ChatMsgDTO">
+		select 
+			chat_idx
+			, chat_room_id room_id
+			, chat_type `type`
+			, chat_message message
+			, chat_sender sender
+			, reg_dt
+		from chat_msg_tb
+		<where>
+			<if test="roomId                    !=null and roomId                    !=''"><![CDATA[ and room_id = #{roomId} ]]></if>
+		</where>
+		order by reg_dt desc
+	</select>
+	
+	<insert id="insetChatMsgTb" parameterType="jdh.example.chat.model.dto.chat.ChatMsgDTO">
+		insert into chat_msg_tb (
+			<trim prefixOverrides=",">
+				<if test="roomId                   !=null and roomId                   !=''"> , chat_room_id </if>
+				<if test="type                     !=null and type                     !=''"> , chat_type </if>
+				<if test="message                  !=null and message                  !=''"> , chat_message </if>
+				<if test="sender                   !=null and sender                   !=''"> , chat_sender </if>
+				<if test="regDt                    !=null and regDt                    !=''"> , reg_dt </if>
+			</trim>
+		) values (
+			<trim prefixOverrides=",">
+				<if test="roomId                   !=null and roomId                   !=''"> , #{roomId} </if>
+				<if test="type                     !=null and type                     !=''"> , #{type} </if>
+				<if test="message                  !=null and message                  !=''"> , #{message} </if>
+				<if test="sender                   !=null and sender                   !=''"> , #{sender} </if>
+				<if test="regDt                    !=null and regDt                    !=''"> , #{regDt} </if>
+			</trim>
+		)
+	</insert>
+</mapper>
