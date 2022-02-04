@@ -1,8 +1,6 @@
 package jdh.example.chat.handler;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +30,14 @@ public class StompHandler implements ChannelInterceptor {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 		// websocket 연결 시
 		if (StompCommand.CONNECT == accessor.getCommand()) {
+			log.info("[StompHandler] CONNECT header :: " + message.getHeaders());
+			
 			// 헤더의 jwt token 검증
 			jwtTokenProvider.validateToken(accessor.getFirstNativeHeader("Authorization"));
 		}
 		// 채팅방 구독 요청 시
 		else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
-			log.info("[StompHandler] header :: " + message.getHeaders());
+			log.info("[StompHandler] SUBSCRIBE header :: " + message.getHeaders());
 			
 			// header정보에서 구독 채팅방 정보를 얻고, roomId를 추출
 			String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
@@ -47,19 +47,15 @@ public class StompHandler implements ChannelInterceptor {
 			// 채팅방 인원수 +1
 			chatRoomRepository.plusUserCount(roomId);
 			
-			// 채팅 전송시간
-			LocalDateTime now = LocalDateTime.now();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			
 			// 클라이언트 입장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
 			String nickname = name.contains(":::") ? name.split(":::")[1] : name;
-			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(nickname).regDt(now.format(formatter)).build());
+			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.ENTER).roomId(roomId).sender(nickname).build());
 			log.info("[StompHandler] subscribe {}, {}", name, roomId);
 		}
 		// websocket 연결 종료 시
 		else if (StompCommand.DISCONNECT == accessor.getCommand()) {
-			log.info("[StompHandler] header :: " + message.getHeaders());
+			log.info("[StompHandler] DISCONNECT header :: " + message.getHeaders());
 			
 			// 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 조회
 			String sessionId = (String) message.getHeaders().get("simpSessionId");
@@ -67,14 +63,10 @@ public class StompHandler implements ChannelInterceptor {
 			// 채팅방 인원수 -1
 			chatRoomRepository.minusUserCount(roomId);
 			
-			// 채팅 전송시간
-			LocalDateTime now = LocalDateTime.now();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			
 			// 클라이언트 퇴장 메시지를 채팅방에 발송 (redis publish)
 			String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
 			String nickname = name.contains(":::") ? name.split(":::")[1] : name;
-			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(nickname).regDt(now.format(formatter)).build());
+			chatService.sendChatMessage(ChatMsgDTO.builder().type(ChatMsgDTO.MessageType.QUIT).roomId(roomId).sender(nickname).build());
 			// 퇴장한 클라이언트의 roomId 맵핑 정보 삭제
 			chatRoomRepository.removeUserEnterInfo(sessionId);
 			log.info("[StompHandler] disconnect {}, {}", sessionId, roomId);
