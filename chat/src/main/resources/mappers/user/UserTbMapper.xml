@@ -9,6 +9,7 @@
 			user_idx
 			, user_id
 			, nickname
+			, logo
 			, reg_dt
 			, mod_dt
 			, del_yn

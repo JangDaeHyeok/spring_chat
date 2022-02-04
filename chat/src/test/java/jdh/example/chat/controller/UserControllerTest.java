@@ -109,7 +109,9 @@ public class UserControllerTest extends ApiCommonTest {
 						PayloadDocumentation.fieldWithPath("nickname").type(JsonFieldType.STRING)
 							.description("닉네임").attributes(key("constraint").value(userRegistTbDTOConstraints.descriptionsForProperty("nickname"))),
 						PayloadDocumentation.fieldWithPath("salt").type(JsonFieldType.STRING)
-						.description("비밀번호 암호화 난수").attributes(key("constraint").value(userRegistTbDTOConstraints.descriptionsForProperty("salt"))).optional()
+						.description("비밀번호 암호화 난수").attributes(key("constraint").value(userRegistTbDTOConstraints.descriptionsForProperty("salt"))).optional(),
+						PayloadDocumentation.fieldWithPath("logo").type(JsonFieldType.STRING)
+						.description("사용자 프로필 로고").attributes(key("constraint").value(userRegistTbDTOConstraints.descriptionsForProperty("logo"))).optional()
 						),
 				PayloadDocumentation.responseFields(
 						PayloadDocumentation.fieldWithPath("result").type(JsonFieldType.STRING)

@@ -11,11 +11,13 @@ public class UserRegistTbDTO {
 	@NotEmpty
 	private String userId;
 	
-	@NotEmpty
-	private String nickname;
+	private String salt;
 	
 	@NotEmpty
 	private String userPw;
 	
-	private String salt;
+	@NotEmpty
+	private String nickname;
+	
+	private String logo;
 }

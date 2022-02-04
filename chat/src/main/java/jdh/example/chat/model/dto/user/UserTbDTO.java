@@ -16,6 +16,8 @@ public class UserTbDTO {
 	@NotEmpty
 	private String nickname;
 	
+	private String logo;
+	
 	private String regDt;
 	
 	private String modDt;
