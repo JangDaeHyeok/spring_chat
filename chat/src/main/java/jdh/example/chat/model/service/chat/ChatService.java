@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
 import jdh.example.chat.model.repository.ChatRoomRepository;
+import jdh.example.chat.model.repository.ChatMsgRepository;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -22,6 +23,7 @@ public class ChatService {
 	private final ChannelTopic channelTopic;
 	private final RedisTemplate<String, Object> redisTemplate;
 	private final ChatRoomRepository chatRoomRepository;
+	private final ChatMsgRepository chatMsgRepository;
 	
 	public String getRoomId(String destination) {
 		int lastIndex = destination.lastIndexOf('/');
@@ -48,7 +50,7 @@ public class ChatService {
 		}
 		
 		// 채팅 데이터 redis 임시 저장
-		// chatMsgRepository.putChatMsgInfo(chatMsgDTO);
+		chatMsgRepository.putChatMsgInfo(chatMsgDTO);
 		
 		// redis topic에 메시지 전송
 		redisTemplate.convertAndSend(channelTopic.getTopic(), chatMsgDTO);

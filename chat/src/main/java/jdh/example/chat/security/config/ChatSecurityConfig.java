@@ -47,9 +47,6 @@ public class ChatSecurityConfig extends WebSecurityConfigurerAdapter {
 			// 사용자 로그인 spring security 적용 제외 항목
 			.antMatchers("/chat/**").hasRole("USER")
 			.anyRequest().permitAll()
-			.and()
-			.logout()
-			
 			// jwt가 없는 경우 exception handler 설정
 			.and()
 			.exceptionHandling()
