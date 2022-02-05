@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="jdh.example.chat.model.dao.user.ChatMsgTbMapper">
+<mapper namespace="jdh.example.chat.model.dao.chat.ChatMsgTbMapper">
 
-	<select id="selectChatMsgTbList" parameterType="jdh.example.chat.model.dto.chat.ChatMsgDTO" resultType="jdh.example.chat.model.dto.chat.ChatMsgDTO">
+	<select id="selectChatMsgTbList" parameterType="hashMap" resultType="jdh.example.chat.model.dto.chat.ChatMsgDTO">
 		select 
 			chat_idx
 			, chat_room_id room_id
@@ -13,9 +13,10 @@
 			, reg_dt
 		from chat_msg_tb
 		<where>
-			<if test="roomId                    !=null and roomId                    !=''"><![CDATA[ and room_id = #{roomId} ]]></if>
+			<if test="roomId                    !=null and roomId                    !=''"><![CDATA[ and chat_room_id = #{roomId} ]]></if>
 		</where>
 		order by reg_dt desc
+		limit #{pageNo}, #{row}
 	</select>
 	
 	<insert id="insetChatMsgTb" parameterType="jdh.example.chat.model.dto.chat.ChatMsgDTO">

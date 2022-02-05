@@ -1,0 +1,53 @@
+package jdh.example.chat.model.service.chat;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jdh.example.chat.model.dao.chat.ChatMsgTbMapper;
+import jdh.example.chat.model.dto.chat.ChatMsgDTO;
+import jdh.example.chat.model.dto.chat.ChatRoomDTO;
+import jdh.example.chat.model.repository.ChatMsgRepository;
+import jdh.example.chat.model.repository.ChatRoomRepository;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @author 장대혁
+ * @date 2022-01-11
+ * @description 채팅방 조회, 생성, 메시지 전송을 담당하는 service
+ */
+@RequiredArgsConstructor
+@Service
+public class ChatMsgService {
+	private final ChatRoomRepository chatRoomRepository;
+	private final ChatMsgRepository chatMsgRepository;
+	
+	@Autowired ChatMsgTbMapper chatMsgTbMapper;
+	
+	public List<ChatMsgDTO> getChatMsgList(Map<String, Object> input) throws Exception {
+		return chatMsgTbMapper.selectChatMsgTbList(input);
+	}
+	
+	// redis 채팅 임시저장 내역 조히 후 mysql에 저장, redis 채팅 임시저장 내역 초기화
+	@Transactional
+	public void addChatMsg() throws Exception {
+		// 모든 채팅방 내역 조회
+		List<ChatRoomDTO> roomList = chatRoomRepository.findAllRoom();
+		
+		for(ChatRoomDTO room : roomList) {
+			// redis 채팅 임시저장 내역 조회
+			List<ChatMsgDTO> chatList = chatMsgRepository.getChatMsgList(room.getRoomId());
+			
+			for(ChatMsgDTO chat : chatList) {
+				// redis to mysql insert
+				chatMsgTbMapper.insetChatMsgTb(chat);
+			}
+		}
+		
+		// redis 채팅 임시저장 내역 초기화
+		
+	}
+}
