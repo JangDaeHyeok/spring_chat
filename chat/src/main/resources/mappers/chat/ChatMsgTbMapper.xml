@@ -23,7 +23,7 @@
 		insert into chat_msg_tb (
 			<trim prefixOverrides=",">
 				<if test="roomId                   !=null and roomId                   !=''"> , chat_room_id </if>
-				<if test="type                     !=null and type                     !=''"> , chat_type </if>
+				<if test="type                     !=null">                                   , chat_type </if>
 				<if test="message                  !=null and message                  !=''"> , chat_message </if>
 				<if test="sender                   !=null and sender                   !=''"> , chat_sender </if>
 				<if test="regDt                    !=null and regDt                    !=''"> , reg_dt </if>
@@ -31,7 +31,7 @@
 		) values (
 			<trim prefixOverrides=",">
 				<if test="roomId                   !=null and roomId                   !=''"> , #{roomId} </if>
-				<if test="type                     !=null and type                     !=''"> , #{type} </if>
+				<if test="type                     !=null">                                   , #{type} </if>
 				<if test="message                  !=null and message                  !=''"> , #{message} </if>
 				<if test="sender                   !=null and sender                   !=''"> , #{sender} </if>
 				<if test="regDt                    !=null and regDt                    !=''"> , #{regDt} </if>
