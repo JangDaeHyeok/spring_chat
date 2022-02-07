@@ -40,6 +40,7 @@ public class ChatMsgService {
 	@Transactional
 	@Scheduled(fixedRate = ADD_CHAT_MSG_DELAY)
 	public void addChatMsg() throws Exception {
+		log.info("[addChatMsg] chat redis to mysql ==> Start");
 		// 모든 채팅방 내역 조회
 		List<ChatRoomDTO> roomList = chatRoomRepository.findAllRoom();
 		
@@ -48,12 +49,13 @@ public class ChatMsgService {
 			List<ChatMsgDTO> chatList = chatMsgRepository.getChatMsgList(room.getRoomId());
 			
 			for(ChatMsgDTO chat : chatList) {
-				log.info(":::>> {} :: {} :: {}", chat.getRoomId(), chat.getMessage(), chat.getType());
+				// log.info(":::>> {} :: {} :: {}", chat.getRoomId(), chat.getMessage(), chat.getType());
 				// redis to mysql insert
 				chatMsgTbMapper.insetChatMsgTb(chat);
 			}
 			// redis 채팅 임시저장 내역 초기화
 			chatMsgRepository.removeChatMsg(room.getRoomId());
 		}
+		log.info("[addChatMsg] chat redis to mysql ==> End");
 	}
 }
