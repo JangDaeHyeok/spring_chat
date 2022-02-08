@@ -106,12 +106,9 @@ public class JwtTokenProvider {
 	
 	// JWT accessToken 생성
 	private String doGenerateRefreshToken(String id) throws Exception {
-		// 사용자 정보 조회
-		UserTbDTO userTbDTO = userTbService.getUserTbOneById(id);
-		
 		String refreshToken = Jwts.builder()
 				.setId(id)
-				.setIssuer(userTbDTO.getNickname())
+				.setIssuer("refresh")
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 5)) // 5시간
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.signWith(SignatureAlgorithm.HS512, secret)
