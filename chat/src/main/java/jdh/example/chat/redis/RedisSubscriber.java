@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jdh.example.chat.model.dto.chat.ChatMsgDTO;
+import jdh.example.chat.util.etc.ValidateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +28,7 @@ public class RedisSubscriber {
 			// ChatMsgDTO 객채로 맵핑
 			ChatMsgDTO chatMsgDTO = objectMapper.readValue(publishMessage, ChatMsgDTO.class);
 			// 채팅방을 구독한 클라이언트에게 메시지 발송
-			if(chatMsgDTO.getRoomId() != null && !chatMsgDTO.getRoomId().equals("") && !chatMsgDTO.getRoomId().equals("null")) {
+			if(ValidateUtil.checkNotEmpty(chatMsgDTO.getRoomId())) {
 				messagingTemplate.convertAndSend("/sub/chat/room/" + chatMsgDTO.getRoomId(), chatMsgDTO);
 				
 				log.info("[RedisSubscriber] 수신 메시지 :: " + publishMessage);

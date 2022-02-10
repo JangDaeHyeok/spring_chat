@@ -34,6 +34,7 @@ import jdh.example.chat.model.service.jwt.UserRefreshTokenTbService;
 import jdh.example.chat.model.service.user.UserLoginTbService;
 import jdh.example.chat.model.service.user.UserTbService;
 import jdh.example.chat.security.jwt.JwtTokenProvider;
+import jdh.example.chat.util.etc.ValidateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -211,7 +212,7 @@ public class LoginController {
 		}
 		
 		// refreshToken 인증 성공인 경우 accessToken 재발급
-		if(userId != null && !userId.equals("")) {
+		if(ValidateUtil.checkNotEmpty(userId)) {
 			// 권한 map 저장
 			List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
