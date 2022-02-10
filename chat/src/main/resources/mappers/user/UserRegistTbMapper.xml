@@ -30,4 +30,16 @@
 			</trim>
 		)
 	</insert>
+	
+	<update id="updateUserTb" parameterType="jdh.example.chat.model.dto.user.UserRegistTbDTO">
+		update user_tb set
+		<trim prefixOverrides=",">
+			<if test="userId                   !=null and userId                   !=''"> , user_id = #{userId} </if>
+			<if test="salt                     !=null and salt                     !=''"> , salt = #{salt} </if>
+			<if test="userPw                   !=null and userPw                   !=''"> , user_pw = #{userPw} </if>
+			<if test="nickname                 !=null and nickname                 !=''"> , nickname = #{nickname}</if>
+			<if test="logo                     !=null and logo                     !=''"> , logo = #{logo} </if>
+			, mod_dt = now()
+		</trim>
+	</update>
 </mapper>
