@@ -6,3 +6,4 @@ Spring Chatting Server
 - Restful API (채팅내역, 회원정보)
 - stomp web socket
 - redis pub/sub
+- Spring Rest Docs를 이용한 API 문서 자동화
